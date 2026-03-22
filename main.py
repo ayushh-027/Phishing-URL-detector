@@ -4,6 +4,16 @@ import re
 
 app = FastAPI()
 
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 class URLRequest(BaseModel):
     url: str
@@ -27,6 +37,17 @@ def check_phishing(url: str):
     if url.count('-') > 3:
         score += 15
         reasons.append("Too many hyphens")
+
+
+    
+    if not url.startswith("https"):
+        score += 10
+        reasons.append("Not using HTTPS")
+
+
+    if url.count('.') > 5:
+        score += 10
+        reasons.append("Too many dots in URL")  
 
     if score < 30:
         result = "SAFE"

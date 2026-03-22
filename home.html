@@ -101,6 +101,8 @@
 
 </head>
 
+
+
 <body>
 
 
@@ -120,7 +122,7 @@
 
     <div class="input-box">
         <input type="text" placeholder="Enter URL here...">
-        <button>Check</button>
+        <button onclick="checkURL()">Check</button>
     </div>
 </section>
 
@@ -145,6 +147,36 @@
     <p>© 2026 PhishGuard | Stay Safe Online</p>
 </footer>
 
+<script>
+async function checkURL() {
+    let url = document.querySelector("input").value;
+    let resultBox = document.createElement("div");
+
+    resultBox.style.marginTop = "20px";
+
+    try {
+        let response = await fetch("http://127.0.0.1:8001/check", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ url: url })
+        });
+
+        let data = await response.json();
+
+        resultBox.innerHTML = `
+            <h3>${data.result}</h3>
+            <p>Risk Score: ${data.score}%</p>
+            <p>${data.reasons.join("<br>")}</p>
+        `;
+    } catch (err) {
+        resultBox.innerHTML = "Error connecting to server";
+    }
+
+    document.body.appendChild(resultBox);
+}
+</script>
 
 </body>
 </html>
