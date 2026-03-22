@@ -4,10 +4,9 @@ import re
 
 app = FastAPI()
 
-# Request model
+
 class URLRequest(BaseModel):
     url: str
-
 
 def check_phishing(url: str):
     score = 0
@@ -19,7 +18,7 @@ def check_phishing(url: str):
 
     if "@" in url:
         score += 20
-        reasons.append("Contains @ symbol")
+        reasons.append("It Contains @ symbol")
 
     if len(url) > 75:
         score += 20
